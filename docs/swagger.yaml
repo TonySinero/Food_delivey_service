@@ -1,0 +1,345 @@
+basePath: /
+definitions:
+  domain.Customer:
+    properties:
+      address:
+        type: string
+      fullName:
+        type: string
+      id:
+        type: integer
+      phoneNumber:
+        type: integer
+    required:
+    - address
+    - fullName
+    - id
+    - phoneNumber
+    type: object
+  domain.CustomerInfo:
+    properties:
+      address:
+        type: string
+      birthday:
+        type: string
+      fullName:
+        type: string
+      phoneNumber:
+        type: string
+    type: object
+  domain.CustomerUpdate:
+    properties:
+      address:
+        type: string
+      birthday:
+        type: string
+      fullName:
+        type: string
+      phoneNumber:
+        type: integer
+    type: object
+  domain.GetAllOrders:
+    properties:
+      address:
+        type: string
+      cost:
+        type: number
+      createdAt:
+        type: string
+      customerID:
+        type: integer
+      id:
+        type: string
+      orderDishes:
+        items:
+          $ref: '#/definitions/domain.OrderDish'
+        type: array
+      statusID:
+        type: integer
+    type: object
+  domain.GetOrderByID:
+    properties:
+      address:
+        type: string
+      cost:
+        type: number
+      courierID:
+        type: string
+      createdAt:
+        type: string
+      customerID:
+        type: integer
+      factTime:
+        type: string
+      id:
+        type: string
+      orderDishes:
+        items:
+          $ref: '#/definitions/domain.OrderDish'
+        type: array
+      paymentID:
+        type: string
+      requiredTime:
+        type: string
+      statusID:
+        type: integer
+    type: object
+  domain.Order:
+    properties:
+      address:
+        type: string
+      customerID:
+        type: integer
+      dishes:
+        items:
+          $ref: '#/definitions/domain.OrderDish'
+        minItems: 1
+        type: array
+      requiredTime:
+        type: string
+      restaurantID:
+        type: string
+    required:
+    - address
+    - customerID
+    - dishes
+    - requiredTime
+    - restaurantID
+    type: object
+  domain.OrderDish:
+    properties:
+      amount:
+        type: integer
+      dishID:
+        type: string
+    required:
+    - amount
+    - dishID
+    type: object
+  handler.customerResponse:
+    properties:
+      data:
+        $ref: '#/definitions/domain.CustomerInfo'
+    type: object
+  handler.dataResponse:
+    properties:
+      data: {}
+    type: object
+  handler.orderResponse:
+    properties:
+      data:
+        $ref: '#/definitions/domain.GetOrderByID'
+    type: object
+  handler.ordersResponse:
+    properties:
+      data:
+        items:
+          $ref: '#/definitions/domain.GetAllOrders'
+        type: array
+    type: object
+  handler.response:
+    properties:
+      message:
+        type: string
+    type: object
+host: 165.232.68.67:8081
+info:
+  contact: {}
+  description: REST API for Delivery
+  title: Food-Delivery API
+  version: "1.0"
+paths:
+  /customer:
+    post:
+      description: Create customer with provided data
+      parameters:
+      - description: Customer data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Customer'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.response'
+      tags:
+      - customer
+  /customer/{id}:
+    get:
+      description: Get customer data by id
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/handler.customerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.dataResponse'
+      tags:
+      - customer
+    put:
+      description: Update customer data by id
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Customer data
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.CustomerUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/handler.customerResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.dataResponse'
+      tags:
+      - customer
+  /customer/orders/{id}:
+    get:
+      description: Get Orders by customer ID and order status
+      parameters:
+      - description: Customer ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: status
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/handler.ordersResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.dataResponse'
+      tags:
+      - customer
+  /order:
+    post:
+      description: Create new order
+      parameters:
+      - description: Order info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/domain.Order'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/handler.dataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.response'
+      summary: Create new order
+      tags:
+      - order
+  /order/{id}:
+    get:
+      description: Get Order by order ID
+      parameters:
+      - description: Order ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            $ref: '#/definitions/handler.orderResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/handler.response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.response'
+        default:
+          description: ""
+          schema:
+            $ref: '#/definitions/handler.response'
+      summary: Get Order by ID
+      tags:
+      - order
+swagger: "2.0"

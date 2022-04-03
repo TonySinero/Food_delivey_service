@@ -1,0 +1,14 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+option go_package = "./pkg/orderservice_cs;orderservice_cs";
+
+service OrderServiceCS {
+  rpc AddDeliveryFeedback(OrderFeedbackOnDeliveryQuality) returns (google.protobuf.Empty) {}
+}
+
+message OrderFeedbackOnDeliveryQuality {
+  string OrderID = 1;
+  string Feedback = 2;
+  float Rating = 3;
+}

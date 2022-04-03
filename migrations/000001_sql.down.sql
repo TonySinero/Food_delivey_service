@@ -1,0 +1,6 @@
+DROP TABLE IF EXISTS order_feedback;
+DROP TABLE IF EXISTS order_dishes;
+DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS baskets;
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS order_status;

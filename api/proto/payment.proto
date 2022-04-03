@@ -1,0 +1,14 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+
+option go_package = "./pkg/paymentservice";
+
+service PaymentService {
+  rpc ChangeStatus(PaymentResult) returns (google.protobuf.Empty);
+}
+
+message PaymentResult{
+  string IdOrder = 1;
+  bool Answer = 2;
+  string PaymentType = 3;
+}
